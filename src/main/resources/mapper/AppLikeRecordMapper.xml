@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.WiseNest.mapper.AppLikeRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.demo.WiseNest.model.entity.AppLikeRecord">
+            <id property="appId" column="appId" jdbcType="BIGINT"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="isLike" column="isLike" jdbcType="TINYINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <insert id="customSaveOrUpdateBatch" parameterType="java.util.List">
+        INSERT INTO app_like_record (appId, userId, isLike, createTime, updateTime, isDelete)
+        VALUES
+        <foreach collection="list" item="record" separator=",">
+            (#{record.appId}, #{record.userId}, #{record.isLike}, NOW(), NOW(), 0)
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        isLike = VALUES(isLike),
+        updateTime = NOW();
+    </insert>
+
+    <sql id="Base_Column_List">
+        appId,userId,isLike,
+        createTime,updateTime,isDelete
+    </sql>
+
+</mapper>
